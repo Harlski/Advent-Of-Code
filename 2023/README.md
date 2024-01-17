@@ -1,0 +1,1 @@
+Placeholder overview of the completed days of 2023
