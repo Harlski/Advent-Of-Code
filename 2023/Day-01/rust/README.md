@@ -6,6 +6,32 @@ Solution uses a combo of extracting numeric values and then finding 1st and 2nd 
 
 Not super challenging, but I was able to build some more comfort with Creates, Return Types - .parse().
 
+--
+
+Sooo. Apprently there was a part two which was slightly more difficult.
+Not difficult in the sense of I had no idea how to do it
+But rather, trying to iterate over the line and check for each word to replace with number
+I couldn't quite work out how I should handle sequentially reading -> replace & then replace again if there was another number
+In the end, rather than doing an if .contains .replace() - I found iterating over a tuple to be the best way to get to the end result
+Convinced I had this solved, the number still wasn't showing as correct when submitting answer.
+Double and triple checking the answer and code I couldn't understand why it wouldn't work.
+I hit up google to see what the number SHOULD be and try to adjust code to somehow get it to work
+Unfortunately I came across a reddit post that advised of the issue I was stuck at.
+Essentially my code was returning words as oneight as (1eight) when it should have returned (18)
+Solution I found for this was changing the variable replaced with to also include the surrounding letters of the number
+I.E o1e, t2o, th3ee, fo4r, fi5e, s6x, se7en, ei8ht, n9e etc.
+This, while probably not the best approached, allowed their niche cases to help cover any of those combining words.
+Result found in the end.
+
+Some things that came out of this that were helpful was getting some practice with the for (var1, var2) looping.
+Rather than the initial if loop showning in lib.rs (commented out) which seems a bit more idiomatic.
+A bit more comfortability with borrowing, but still some work for it to become second nature.
+
+Keen to see others results.
+-- End Day 01 --
+
+
+
 --- Day 1: Trebuchet?! ---
 
 Something is wrong with global snow production, and you've been selected to take a look. The Elves have even given you a map; on it, they've used stars to mark the top fifty locations that are likely to be having problems.
