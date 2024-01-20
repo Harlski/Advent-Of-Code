@@ -1,3 +1,11 @@
+Run by passing parameters of text file `cargo run -- items.txt`
+
+Took some time to learn how to read from file, rather than hardcoding - you can pass any text file to confirm test.
+Solution uses a combo of extracting numeric values and then finding 1st and 2nd number via .nth(0) + .nth_back(0)
+.nth_back(0) in this case can also be the first number if there is only one number.
+
+Not super challenging, but I was able to build some more comfort with Creates, Return Types - .parse().
+
 --- Day 1: Trebuchet?! ---
 
 Something is wrong with global snow production, and you've been selected to take a look. The Elves have even given you a map; on it, they've used stars to mark the top fifty locations that are likely to be having problems.
