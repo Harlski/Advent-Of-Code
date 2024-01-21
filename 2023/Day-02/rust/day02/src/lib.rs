@@ -1,5 +1,29 @@
-use regex::Regex;
+// use regex::Regex;
 use std::fs;
+
+//Part 2
+pub fn fewest_number(games: Vec<Vec<String>>) -> i32 {
+    let (mut red_total, mut green_total, mut blue_total) = (0, 0, 0);
+
+    for game in games {
+        // println!("Game: {game_num}, - Draw: {:?}", game);
+        let mut temp_num: i32 = 0;
+    
+        for item in game {
+            if item.parse::<i32>().is_ok(){
+                temp_num = item.parse::<i32>().expect("Shouldn't error.");
+                // println!("It's a number mr white");
+            }
+            if item == "green" && temp_num > green_total { /* println!("Yo it's actually higher tho mr white"); */ green_total = temp_num  }
+            if item == "red" && temp_num > red_total { /* println!("Yo it's actually higher tho mr white"); */ red_total = temp_num }
+            if item == "blue" && temp_num > blue_total { /* println!("Yo it's actually higher tho mr white"); */  blue_total = temp_num  }
+            
+            // println!("{item}");
+        }
+    }
+    let total_nums = red_total * green_total * blue_total;
+    return total_nums
+}
 
 pub fn contains_higher(games: Vec<Vec<String>>) -> bool {
     let (red_total, green_total, blue_total) = (12, 13, 14);

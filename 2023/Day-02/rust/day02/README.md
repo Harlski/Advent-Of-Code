@@ -3,6 +3,11 @@ Pretty fun one, feel like I'm getting the hang of types and returns, generally k
 For some reason I went down the route of doing Regex, but in the end I never ended up actually using it - still got what I needed.
 Though it's probably easier with regex, some manual parsing wasn't an issue as I got some familiarity with a few more functions, .next_back() 
 
+Part 2 Notes:
+Cleared this pretty quickly, < 20 minutes.
+Didn't have to change much from the codebase, just created a new fewest_numbers() function that keeps track of the highest count detected for each rgb value
+Pretty happy with this challenge overall, likely though it's not idiomatic and can be done better - but a solution is a solution.
+On to day 03.
 
 --- Day 2: Cube Conundrum ---
 
