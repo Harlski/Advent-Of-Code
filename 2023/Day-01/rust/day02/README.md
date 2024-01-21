@@ -1,3 +1,9 @@
+Part 1 Notes:
+Pretty fun one, feel like I'm getting the hang of types and returns, generally know what to use - but always still looking up documentation to find usage of how I would handle.
+For some reason I went down the route of doing Regex, but in the end I never ended up actually using it - still got what I needed.
+Though it's probably easier with regex, some manual parsing wasn't an issue as I got some familiarity with a few more functions, .next_back() 
+
+
 --- Day 2: Cube Conundrum ---
 
 You're launched high into the atmosphere! The apex of your trajectory just barely reaches the surface of a large island floating in the sky. You gently land in a fluffy pile of leaves. It's quite cold, but you don't see much snow. An Elf runs over to greet you.
