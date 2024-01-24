@@ -93,8 +93,10 @@ fn check_surrounds(lines: Vec<String>) -> i32 {
 
                 if temp_num.is_empty() { symbol_found = false;
                 } else {                    
-                    println!("Adding: {:?}", &temp_num);
-                    value += &temp_num.parse::<i32>().unwrap();
+                    if symbol_found {
+                        println!("Index: {} Adding: {:?} - {}", i, &temp_num, &symbol_found);
+                        value += &temp_num.parse::<i32>().unwrap();
+                    }
                     temp_num.clear();
                     symbol_found = false;
                 }
@@ -102,7 +104,10 @@ fn check_surrounds(lines: Vec<String>) -> i32 {
             }
         }
         if !temp_num.is_empty() {
-            value += &temp_num.parse::<i32>().unwrap();
+            if symbol_found{
+
+                value += &temp_num.parse::<i32>().unwrap();
+            }
             temp_num.clear();
             symbol_found = false;
         }  
