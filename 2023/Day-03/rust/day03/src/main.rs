@@ -1,7 +1,188 @@
+use std::fs;
+
+
 fn main() {
     println!("Hello, Day 03!");
+
+    let items = array_file();
+    // println!("{:?}", items);
+    // array_lines(items.clone());
+    let mut count = 0;
+    count += check_surrounds(items);
+    println!("{}", count);
+    // for n in 1..items.len() {
+    //     let prev = items[n-1].expect("Number out of range");
+    //     let current = items[n];
+    //     let next = items[n+1].expect("Number out of range");
+    //     if n == 0 {
+    //         count += check_surrounds(current,next);
+    //     }
+    //     else if n == items.len() {
+    //         count += check_surrounds(prev,current);
+    //     }
+    //     else {
+    //         count += check_surrounds(prev,current,next);
+    //     }
+
+        
+    //     check_surrounds()
+    //     println!("{}. line: {}", n, items[n]);
+    // }
 }
 
+
+fn check_surrounds(lines: Vec<String>) -> i32 {
+    // When a number is found we append it to temp_num
+    // Any symbol found will trigger symbol_found to be true
+    // If symbol_found = true we clear temp_num &  we don't append any numbers to temp_num
+    // A found . will count += temp_num and reset temp_num to 0, also reset symbol_found to false
+    // Repeat cycle
+
+    let mut value = 0;
+    let mut temp_num: String = "".to_string();
+    let mut symbol_found = false; // Cheat was of getting the number, if it's false, it will 
+    // if . && symbol_found { value += temp_num }
+    // if symbol{ symbol_found = true; temp_num.clear(); }
+
+    for i in 0..lines.len() {
+        
+        let mut previous: String = Default::default();
+        if i == 0 {
+            // println!("i is 0 so lines[1]");
+            previous = lines[i].clone();  // !!! Need to catch case when i = 0 so we don't underflow backwards
+            // println!("prev: {:?}", &previous);
+        } else {
+            previous = lines[i-1].clone();  // !!! Need to catch case when i = 0 so we don't underflow backwards
+        }
+        // println!("prev after if: {:?}", &previous);
+
+        let current = lines[i].clone();
+
+        let mut next: String = Default::default();
+        if i == lines.len() -1 {
+            next = lines[i].clone(); // !!! Need to catch case where length of lines. So we don't overflow.
+        } else {
+            next = lines[i+1].clone(); // !!! Need to catch case where length of lines. So we don't overflow.
+        }
+        // println!("Line: {}", lines[i]);
+
+        let mut temp_temp_num: String = "".to_string();
+        let mut char_index:i32 = 0;
+
+        for c in lines[i].chars() {
+            // println!("Temp Num on restart, with char_index: {}, {}")
+ 
+            if c != '.' && !c.is_numeric() { symbol_found = true; } // This should catch cases where a number looks like 123&321 and reset temp_num
+            if c.is_numeric() {
+                temp_num.push_str(&c.to_string());
+                // println!("ttn: {}", temp_num);
+
+                if !symbol_found && any_symbols(previous.clone(), current.clone(), next.clone(), i as i32, char_index) {
+                    
+                    symbol_found = true;
+                    // println!("Temp Num: {}, Symbol Found? {}", temp_num, symbol_found);
+                }
+                // println!("Char index: {}", char_index);
+                // println!("Temp Num: {}", &temp_num);
+                // println!("Line:{i} Char: {}", c);
+                // println!("It's a number");
+            }
+            char_index += 1;
+            // println!("Temp Num {:?}", &temp_num);
+            if c == '.' || !c.is_numeric() {
+
+                if temp_num.is_empty() { symbol_found = false;
+                } else {                    
+                    println!("Adding: {:?}", &temp_num);
+                    value += &temp_num.parse::<i32>().unwrap();
+                    temp_num.clear();
+                    symbol_found = false;
+                }
+                // println!("Found the dot");
+            }
+        }
+        if !temp_num.is_empty() {
+            value += &temp_num.parse::<i32>().unwrap();
+            temp_num.clear();
+            symbol_found = false;
+        }  
+        char_index = 0;
+    }
+
+    
+    value
+}
+
+fn any_symbols(p: String, c: String, n: String, index: i32, char_index:i32) -> bool {
+    let p_vec: &Vec<char> = &p.chars().collect();
+    let c_vec: &Vec<char> = &c.chars().collect();
+    let n_vec: &Vec<char> = &n.chars().collect();
+
+    let mut c_ind = char_index as usize;
+    if c_ind == 0              { c_ind = 1;}             // Handles UNDERFLOW
+    if c_ind == c_vec.len() -1 { c_ind = &c_ind - 1; }   // Handles OVERFLOW
+    // println!("What is vec len: {}", c_vec.len());
+    // println!("c_ind is out: {}", &c_ind);
+    // println!("\nIndex: {} - {} \np: {:?} \nc: {:?}, \nn: {:?} ", index, char_index, p,c,n);
+    // println!("P should be {:?}", p_vec[char_index as usize -1]);
+    // println!("Char usize: {}", char_index as usize);
+    // Previous line Before, After and Next char
+    if p_vec[c_ind - 1] != '.' && !p_vec[c_ind - 1].is_numeric() {
+        return true
+        // println!("There is a dot or symbol: {}", p_vec[c_ind - 1]);
+    }
+    if p_vec[c_ind] != '.' && !p_vec[c_ind].is_numeric() {
+        return true
+        // println!("There is a dot or symbol: {}", p_vec[c_ind]);
+    }    
+    if p_vec[c_ind + 1] != '.' && !p_vec[c_ind + 1].is_numeric() {
+        return true
+        // println!("There is a dot or symbol: {}", p_vec[c_ind + 1]);
+    }
+    
+
+
+    // Current line Before & After char
+    if c_vec[c_ind - 1] != '.' && !c_vec[c_ind - 1].is_numeric() {
+        return true
+        // println!("There is a dot or symbol: {}", c_vec[c_ind - 1]);
+    }
+    if c_vec[c_ind + 1] != '.' && !c_vec[c_ind + 1].is_numeric() {
+        return true
+        // println!("There is a dot or symbol: {}", c_vec[c_ind + 1]);
+    }
+    //
+
+    // Next Line, Before After and Current char
+    if n_vec[c_ind - 1] != '.' && !n_vec[c_ind - 1].is_numeric() {
+        return true
+        // println!("There is a dot or symbol: {}", n_vec[c_ind - 1]);
+    }
+    if n_vec[c_ind] != '.' && !n_vec[c_ind].is_numeric() {
+        return true
+        // println!("There is a dot or symbol: {}", n_vec[c_ind]);
+    }
+    if n_vec[c_ind + 1] != '.' && !n_vec[c_ind + 1].is_numeric() {
+        return true
+        // println!("There is a dot or symbol: {}", n_vec[c_ind + 1]);
+    }
+    return false
+}
+
+
+
+fn array_file() -> Vec<String> {
+    let mut lines = Vec::<String>::new();
+
+
+    for line in fs::read_to_string("input.txt").unwrap().lines() {
+        lines.push(line.to_string());
+    }
+    for line in &lines{
+        // println!("Lines: {:?}", line);
+    }
+    lines
+}
 // Plan of approach
 // This is a peculiar one though I need to work out a couple of things
 // 1. The full number, 123, 12, 8 etc. 2. The index of the first digit, second digit, third digit etc.
