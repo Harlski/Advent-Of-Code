@@ -103,7 +103,7 @@ fn check_surrounds(lines: Vec<String>) -> i32 {
                 // println!("Found the dot");
             }
         }
-        if !temp_num.is_empty() {
+        if !temp_num.is_empty() { // Once a line ends, we check to see if there was any valid number and then add the value to total. Otherwise we clear.
             if symbol_found{
 
                 value += &temp_num.parse::<i32>().unwrap();
