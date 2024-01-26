@@ -8,7 +8,8 @@ fn main() {
     // println!("{:?}", items);
     // array_lines(items.clone());
     let mut count = 0;
-    count += check_surrounds(items);
+    // count += check_surrounds(items);
+    count += check_surround_of_symbol(items);
     println!("{}", count);
     // for n in 1..items.len() {
     //     let prev = items[n-1].expect("Number out of range");
@@ -30,6 +31,435 @@ fn main() {
     // }
 }
 
+struct Symbol {
+    line: usize,
+    index: usize,
+}
+
+fn check_surround_of_symbol(lines: Vec<String>) -> i32 {
+
+    let mut value = 0;
+
+    // let mut symbol_indexes: Vec<Vec<Symbol>> = vec![];
+    // println!("{:?}", symbol_indexes);
+    for i in 0..lines.len() {
+        value += symbol_indexes_in_line(lines.clone(), lines[i as usize].clone(), i);
+    }
+    // for item in &symbol_indexes {
+    //     println!("Temp  Sym: {0} index: {1}", item.line , item.index);
+    // }
+    fn symbol_indexes_in_line(lines: Vec<String>, line: String, line_no: usize) -> i32 {
+        let mut value: i32 = 0;
+        let mut index: i16 = 0;
+
+        // let mut temp_symbols: Vec<Symbol> = vec![];
+        
+        let mut p: Vec<char> = Default::default();
+        let curr: Vec<char> = lines[line_no].chars().collect();
+        let mut n: Vec<char> = Default::default();
+
+        if line_no == 0 {
+            // println!("i is 0 so lines[1]");
+            p = lines[line_no].chars().collect(); // !!! Need to catch case when i = 0 so we don't underflow backwards
+            // println!("prev: {:?}", &previous);
+        } else {
+            p = lines[line_no as usize - 1].chars().collect();   // !!! Need to catch case when i = 0 so we don't underflow backwards
+        }
+        // println!("prev after if: {:?}", &previous);
+
+        if line_no == lines.len() - 1 {
+            // println!("i is 0 so lines[1]");
+            n = lines[line_no].chars().collect(); // !!! Need to catch case when i = 0 so we don't underflow backwards
+            // println!("prev: {:?}", &previous);
+        } else {
+            n = lines[line_no + 1].chars().collect();   // !!! Need to catch case when i = 0 so we don't underflow backwards
+        }
+        // println!("line chars: {:?}", line_chars);
+        for c in line.chars().clone() {
+            if c != '.' && !c.is_numeric() {
+                let mut num_line_1: bool = false;
+                let mut num_line_2: bool = false;
+                let mut num_line_3: bool = false;
+                
+                let mut number1: String = "".to_string();
+                let mut number2: String = "".to_string();
+
+                // This confirms if there is a number surrouding any of the 8 squares of the detected symbol
+                // If 2 lines are true, we can confirm that there is two unique numbers
+                if (p[index as usize -1].is_numeric() || p[index as usize].is_numeric() || p[index as usize +1].is_numeric()){
+                    num_line_1 = true;
+                }
+                if (n[index as usize -1].is_numeric() || n[index as usize].is_numeric() || n[index as usize +1].is_numeric()){
+                    num_line_3 = true;
+                }
+                if (curr[index as usize -1].is_numeric() || curr[index as usize +1].is_numeric()){
+                    num_line_2 = true;
+                }   
+                // println!("1: {} 2: {} 3: {}", &num_line_1, &num_line_2, &num_line_3);
+
+              
+
+                // Checks if numbers on current line is like 1&1 
+                if (curr[index as usize - 1].is_numeric() && curr[index as usize + 1].is_numeric()){
+                    let mut i = 1;
+                    println!("\nTop Line Left: {} - Line Char: {}", line_no, index);
+                    // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                    println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                    // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+
+                    //--- This gets the middle left number
+                    while curr[index as usize - i as usize].is_numeric() {
+                        number1 = number1 + &curr[index as usize - i].to_string();
+                        i += 1;
+                        if (index as usize - i as usize) == 0 {
+                            i = 1;
+                            break; // Break so we don't start loop again and underflow
+                        }
+                    }
+                    i = 1; // Reset i so we can get check the right number next
+                    number1 = number1.chars().rev().collect::<String>(); // Reverses the number to correct order
+                    //---
+
+                    //--- This gets the middle right number
+                    while curr[index as usize + i as usize].is_numeric() {
+                        // println!("SHould be in here");
+                        number2 = number2 + &curr[index as usize + i].to_string();
+                        i += 1;
+                    }
+                    //--- End 1&1
+                    // println!("\nMiddle Line: {} - Line Char: {}", line_no, index);
+                    // println!("{}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                    // println!("{}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                    // println!("{}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                    println!("{} * {}", &number1, &number2);
+                    let combined = number1.parse::<i32>().unwrap() *  number2.parse::<i32>().unwrap();
+                    println!("{}", &combined);
+                    value += combined;
+                }
+
+                // // Checks if two numbers on top line like 1.1
+                if (p[index as usize - 1].is_numeric() && !p[index as usize].is_numeric() && p[index as usize + 1].is_numeric()){
+                    let mut i = 1;
+                    println!("\nTop Line Left: {} - Line Char: {}", line_no, index);
+                    println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                    // println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                    // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                    // println!("{} - Num: {}", j, &p[index as usize - j as usize]);
+
+                    //--- This gets the top left number
+                    while ((index as usize - i as usize) >=  0) && p[index as usize - i as usize].is_numeric() {
+                        number1 = number1 + &p[index as usize - i].to_string();
+                        i += 1;
+                        if (index as usize - i as usize) == 0 {
+                            i = 1;
+                            break; // Break so we don't start loop again and underflow
+                        }
+                    }
+                    i = 1; // Reset i so we can get check the right number next
+                    number1 = number1.chars().rev().collect::<String>(); // Reverses the number to correct order
+                    //---
+
+                    //--- This gets the top right number
+                    while ((index as usize + i as usize) <= p.len() - 1) && p[index as usize + i as usize].is_numeric() {
+                        // println!("SHould be in here");
+                        number2 = number2 + &p[index as usize + i].to_string();
+                        i += 1;
+                    }
+                    //--- end top 1.1
+
+
+                    // println!("\nTop Line: {} - Line Char: {}", line_no, index);
+                    // println!("{}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                    // println!("{}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                    // println!("{}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                    println!("{} * {}", &number1, &number2);
+                    let combined = number1.parse::<i32>().unwrap() *  number2.parse::<i32>().unwrap();
+                    println!("{}", &combined);
+                    value += combined;
+                }
+
+                // // Checks to see if two numbers on bottom line like 1.1
+                if (n[index as usize -1].is_numeric() && !n[index as usize].is_numeric() && n[index as usize + 1].is_numeric()){
+                    // Walk left to get bottom left number
+                    let mut i = 1;
+                    println!("\nTop Line Left: {} - Line Char: {}", line_no, index);
+                    // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                    // println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                    println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+
+                    //--- This gets the bottom left number
+                    while ((index as usize - i as usize) >=  0) && n[index as usize - i as usize].is_numeric() {
+                        // println!("We are adding number: {}", &n[index as usize -i].to_string());
+
+                        number1 = number1 + &n[index as usize - i].to_string();
+                        if (index as usize -i as usize) == 0 {
+                            // println!("Don't wanna overflow");
+                            i = 1;
+                            break;
+                        }
+                        i += 1;
+                    }
+                    i = 1;
+                    number1 = number1.chars().rev().collect::<String>(); // Reverses the number to correct order
+                    //---
+
+                    //--- This gets the bottom right number
+                    while ((index as usize + i as usize) <= n.len() - 1) && n[index as usize + i as usize].is_numeric() {
+                        // println!("SHould be in here");
+                        number2 = number2 + &n[index as usize + i].to_string();
+                        i += 1;
+                    }
+                
+                /// 
+                // println!("\nBottom Line: {} - Line Char: {}", line_no, index);
+                // println!("{}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                // println!("{}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                // println!("{}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                println!("{} * {}", number1, number2);
+                let combined = number1.parse::<i32>().unwrap() *  number2.parse::<i32>().unwrap();
+                println!("{}", &combined);
+                value += combined;
+            }
+                //--- end bot 1.1
+
+                // Checks Line 1 & 3 for numbers
+                if num_line_1 && num_line_3 {
+                    let mut j = 1;
+
+                    println!("\nTop Line Left: {} - Line Char: {}", line_no, index);
+                    println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                    // println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                    println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                    // println!("{} - Num: {}", j, &p[index as usize - j as usize]);
+                    if p[index as usize -1].is_numeric(){
+                        j = 1;
+                        while p[index as usize - j as usize].is_numeric() {
+                            if p[index as usize - j as usize].is_numeric(){
+                                number1 = p[index as usize - j as usize].to_string() + &number1;
+                            }
+                            // println!("pindex: {}, j: {}", index, j);
+                            if j >= index { break; }
+                            j += 1;
+                            // println!("number 1: {}", &number1);
+                            
+                        }
+                    } 
+                        
+                    j = 0;
+                    if !p[index as usize].is_numeric(){
+                        j = 1;
+                    }
+                
+                    while p[index as usize + j as usize].is_numeric() {
+                        // println!("\n Top Line RIght: {} - Line Char: {}", line_no, index);
+                        // println!("{} - Num: {}", j, &p[index as usize + j as usize]);
+                        // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                        // println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                        // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                        if p[index as usize + j as usize].is_numeric(){
+                            number1 = number1 + &p[index as usize + j as usize].to_string();
+                        }
+                        j += 1;
+                    }
+
+
+
+                    // Bottom Number Get
+                    j = 1;
+                    if n[index as usize -1].is_numeric(){
+                        while n[index as usize - j as usize].is_numeric() {
+                            // println!("\nTop Line Left: {} - Line Char: {}", line_no, index);
+                            // println!("{} - Num: {}", j, &p[index as usize - j as usize]);
+                            // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                            // println!("{}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                            // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                            if n[index as usize - j as usize].is_numeric(){
+                                number2 = n[index as usize - j as usize].to_string() + &number2;
+                            } 
+                            if j >= index { break; }
+                            j += 1;
+                            // println!("number 1: {}", &number1);
+                        }           
+                    }
+
+                    j = 0;
+                    if !n[index as usize].is_numeric(){
+                        j = 1;
+                    }
+
+                    while n[index as usize + j as usize].is_numeric() {
+                        // println!("\n Top Line RIght: {} - Line Char: {}", line_no, index);
+                        // println!("{} - Num: {}", j, &p[index as usize + j as usize]);
+                        // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                        // println!("{}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                        // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                        if n[index as usize + j as usize].is_numeric(){
+                            number2 = number2 + &n[index as usize + j as usize].to_string();
+                        }
+                        j += 1;
+                        if (index + j) == n.len().try_into().unwrap() {
+                            // println!("overflow 1");
+                            break;
+                        }
+                    }
+                    println!("NUM1: {} NUM2: {}", &number1, &number2);
+                    let combined = number1.parse::<i32>().unwrap() * number2.parse::<i32>().unwrap();
+                    println!("{}", &combined);
+                    value += combined;
+                }
+
+                // Checks Line 1 & 2 for numbers
+                if num_line_1 && num_line_2 {
+                    let mut j = 1;
+                    println!("\nTop Line Left: {} - Line Char: {}", line_no, index);
+                    println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                    println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                    // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                    // println!("{} - Num: {}", j, &p[index as usize - j as usize]);
+
+                    // println!("\nTop Line Left: {} - Line Char: {}", line_no, index);
+                    // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                    // println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                    // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                    // println!("{} - Num: {}", j, &p[index as usize - j as usize]);
+                    if p[index as usize -1].is_numeric(){
+                        j = 1;
+                        while p[index as usize - j as usize].is_numeric() {
+                            if p[index as usize - j as usize].is_numeric(){
+                                number1 = p[index as usize - j as usize].to_string() + &number1;
+                            }
+                            // println!("pindex: {}, j: {}", index, j);
+                            if j >= index { break; }
+                            j += 1;
+                            // println!("number 1: {}", &number1);
+                            
+                        }
+                    } 
+                        
+                    j = 0;
+                    if !p[index as usize].is_numeric(){
+                        j = 1;
+                    }
+
+                    while p[index as usize + j as usize].is_numeric() {
+                        // println!("\n Top Line RIght: {} - Line Char: {}", line_no, index);
+                        // println!("{} - Num: {}", j, &p[index as usize + j as usize]);
+                        // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                        // println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                        // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                        if p[index as usize + j as usize].is_numeric(){
+                            number1 = number1 + &p[index as usize + j as usize].to_string();
+                        }
+                        j += 1;
+                    }
+
+                    // Middle Number Get
+                    j = 1;
+                    if curr[index as usize + 1].is_numeric() {
+                        while curr[index as usize + j as usize].is_numeric(){
+                            if curr[index as usize + j as usize].is_numeric(){
+                                number2 = number2 + &curr[index as usize + j as usize].to_string();
+                            }
+                            j += 1;
+                        } 
+
+                    } else {
+                        while curr[index as usize - j as usize].is_numeric(){
+                            if curr[index as usize - j as usize].is_numeric(){
+                                number2 = curr[index as usize - j as usize].to_string() + &number2.to_string();
+                            }
+                            j += 1;
+                        } 
+
+                    }
+                    println!("NUM1: {} NUM2: {}", &number1, &number2);
+                    let combined = number1.parse::<i32>().unwrap() * number2.parse::<i32>().unwrap();
+                    println!("{}", &combined);
+                    value += combined;
+                }
+
+                // Checks Line 2 & 3 for numbers
+                if num_line_2 && num_line_3 {
+                    
+                    println!("\nTop Line Left: {} - Line Char: {}", line_no, index);
+                    // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                    println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                    println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                    // println!("{} - Num: {}", j, &p[index as usize - j as usize]);
+                    
+                    let mut j = 1;
+                    // Bottom Number Get
+                    if n[index as usize -1].is_numeric(){
+                        while n[index as usize - j as usize].is_numeric() {
+                            // println!("\nTop Line Left: {} - Line Char: {}", line_no, index);
+                            // println!("{} - Num: {}", j, &p[index as usize - j as usize]);
+                            // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                            // println!("C{}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                            // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                            if n[index as usize - j as usize].is_numeric(){
+                                number1 = n[index as usize - j as usize].to_string() + &number1;
+                            } 
+                            if j == index { break; }
+                            j += 1;
+                            // println!("number 1: {}", &number1);
+                        }           
+                    }
+
+                    j = 0;
+                    if !n[index as usize].is_numeric(){
+                        j = 1;
+                    }
+
+                    while n[index as usize + j as usize].is_numeric() {
+                        // println!("\n Top Line RIght: {} - Line Char: {}", line_no, index);
+                        // println!("{} - Num: {}", j, &p[index as usize + j as usize]);
+                        // println!("T {}{}{}{}{}{}{}", p[index as usize -3],p[index as usize -2],p[index as usize -1],p[index as usize],p[index as usize +1], p[index as usize +2], p[index as usize +3]);
+                        // println!("C {}{}{}{}{}{}{}", curr[index as usize -3],curr[index as usize -2],curr[index as usize -1],curr[index as usize],curr[index as usize +1], curr[index as usize +2], curr[index as usize +3]);
+                        // println!("B {}{}{}{}{}{}{}", n[index as usize -3],n[index as usize -2],n[index as usize -1],n[index as usize],n[index as usize +1], n[index as usize +2], n[index as usize +3]);
+                        if n[index as usize + j as usize].is_numeric(){
+                            number1 = number1 + &n[index as usize + j as usize].to_string();
+                        }
+                        if (index + j) >= n.len().try_into().unwrap() {
+                            // println!("overflow 1");
+                            break;
+                        }
+                        j += 1;
+                    }
+
+                    // Middle Number Get
+                    j = 1;
+                    if curr[index as usize + 1].is_numeric() {
+                        while curr[index as usize + j as usize].is_numeric(){
+                            if curr[index as usize + j as usize].is_numeric(){
+                                number2 = number2 + &curr[index as usize + j as usize].to_string();
+                            }
+                            j += 1;
+                        } 
+
+                    } else {
+                        while curr[index as usize - j as usize].is_numeric(){
+                            if curr[index as usize - j as usize].is_numeric(){
+                                number2 = curr[index as usize - j as usize].to_string() + &number2.to_string();
+                            }
+                            j += 1;
+                        } 
+
+                    }
+                    println!("NUM1: {} NUM2: {}\n", &number2, &number1);
+                    let combined = number1.parse::<i32>().unwrap() * number2.parse::<i32>().unwrap();
+                    println!("{}", &combined);
+                    value += combined;
+                }
+
+            }
+            index += 1;
+        }
+        value
+    }
+    // println!("SLine: {:?}, SIndex: {:?}", symbol_indexes[0], symbol_indexes[0]);
+    // println!("Value: {}", &value);
+    value
+}
 
 fn check_surrounds(lines: Vec<String>) -> i32 {
     // When a number is found we append it to temp_num
@@ -173,8 +603,6 @@ fn any_symbols(p: String, c: String, n: String, index: i32, char_index:i32) -> b
     }
     return false
 }
-
-
 
 fn array_file() -> Vec<String> {
     let mut lines = Vec::<String>::new();
