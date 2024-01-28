@@ -1,9 +1,26 @@
+use std::fs;
+
 fn main() {
     println!("Hello, Day04!");
+   
+    // let width = input.iter().position(|b| b == &b'\n').unwrap() as isize;
+    let mut temp: Vec<&str> = vec![];
+    let mut winning_nums: Vec<&str> = vec![];
+    let mut game_numbers: Vec<&str> = vec![];
+    // println!("{:?}", (0..input.len() - 2).filter_map(|i| Some(input[*i] != b" ".swap())));
+    for line in fs::read_to_string("input.txt").unwrap().lines() {
+        let temp_gn: String = line.split(":").collect().to_string();
+         
+        println!("{:?}", temp_gn);
+    }
+    // println!("Input: {:?} ", input);
 
-    let input_file = ".input.txt";
+    // println!("Whats the bytes: {:?}", input);
+    
+
 }
 
+// Bytes up to from 58(:) -> 124(|) -> 10(EOL)
 // So the object of this seems pretty straight forward
 // Though I expect with part 2 there is likely to be some spanner that causes it to not be so simple
 // I want to try experimenting with .map() .filter() etc here as I noticed it to be a recurring tool used by other solves
