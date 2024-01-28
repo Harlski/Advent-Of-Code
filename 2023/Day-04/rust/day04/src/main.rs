@@ -5,8 +5,8 @@ fn main() {
    
     // let width = input.iter().position(|b| b == &b'\n').unwrap() as isize;
     let mut temp: Vec<&str> = vec![];
-    let mut winning_nums: Vec<&str> = vec![];
-    let mut game_numbers: Vec<&str> = vec![];
+    // let mut winning_nums: Vec<&str> = vec![];
+    // let mut game_numbers: Vec<&str> = vec![];
     // println!("{:?}", (0..input.len() - 2).filter_map(|i| Some(input[*i] != b" ".swap())));
     for line in fs::read_to_string("input.txt").unwrap().lines() {
         let temp_gn: String = line.split(":").collect().to_string();
