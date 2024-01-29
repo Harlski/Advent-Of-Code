@@ -9,9 +9,12 @@ fn main() {
     let mut game_numbers: Vec<&str> = vec![];
     // println!("{:?}", (0..input.len() - 2).filter_map(|i| Some(input[*i] != b" ".swap())));
     for line in fs::read_to_string("input.txt").unwrap().lines() {
-        let temp_gn: String = line.split(":").collect().to_string();
-         
-        println!("{:?}", temp_gn);
+        let mut winning_num = line.split(":").last().unwrap().split("|").next().unwrap().split_ascii_whitespace().collect::<Vec<&str>>();
+        let mut game_numbers = line.split(":").last().unwrap().split("|").last().unwrap().split_ascii_whitespace().collect::<Vec<&str>>();
+        winning_num.sort_by_key(|x| x.parse::<i8>().unwrap());
+        game_numbers.sort_by_key(|x| x.parse::<i8>().unwrap());
+        println!("Winning Numbers: {:?}", winning_num);
+        println!("Game Numbers: {:?}", game_numbers);
     }
     // println!("Input: {:?} ", input);
 
