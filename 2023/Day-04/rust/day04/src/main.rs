@@ -4,23 +4,37 @@ fn main() {
     println!("Hello, Day04!");
    
     // let width = input.iter().position(|b| b == &b'\n').unwrap() as isize;
-    let mut temp: Vec<&str> = vec![];
+    // let mut temp: Vec<&str> = vec![];
     let mut winning_nums: Vec<&str> = vec![];
     let mut game_numbers: Vec<&str> = vec![];
+    let mut total_count = 0;
     // println!("{:?}", (0..input.len() - 2).filter_map(|i| Some(input[*i] != b" ".swap())));
     for line in fs::read_to_string("input.txt").unwrap().lines() {
         let mut winning_num = line.split(":").last().unwrap().split("|").next().unwrap().split_ascii_whitespace().collect::<Vec<&str>>();
         let mut game_numbers = line.split(":").last().unwrap().split("|").last().unwrap().split_ascii_whitespace().collect::<Vec<&str>>();
         winning_num.sort_by_key(|x| x.parse::<i8>().unwrap());
         game_numbers.sort_by_key(|x| x.parse::<i8>().unwrap());
-        println!("Winning Numbers: {:?}", winning_num);
-        println!("Game Numbers: {:?}", game_numbers);
+
+
+        let mut count = 0;
+        for item in &game_numbers {
+            for win_num in &winning_num {
+                // println!("Compare I: {:?} W: {:?}", &item, &win_num);
+                while item <= win_num {
+                    if item.parse::<i8>().unwrap() == win_num.parse::<i8>().unwrap(){
+                        if count == 0 { count = 1; 
+                        } else {
+                            count = count * 2;
+                        }
+                        println!("Match! {:?}", item);
+                    } 
+                    break
+                }
+            }
+        }
+        total_count += count;
+        println!("Count: {}", total_count);
     }
-    // println!("Input: {:?} ", input);
-
-    // println!("Whats the bytes: {:?}", input);
-    
-
 }
 
 // Bytes up to from 58(:) -> 124(|) -> 10(EOL)
