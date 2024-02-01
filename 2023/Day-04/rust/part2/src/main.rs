@@ -33,62 +33,18 @@ fn main() {
         let mut game_numbers = line.split(":").last().unwrap().split("|").last().unwrap().split_ascii_whitespace().collect::<Vec<&str>>();
         winning_num.sort_by_key(|x| x.parse::<i8>().unwrap());
         game_numbers.sort_by_key(|x| x.parse::<i8>().unwrap());
-
-        let mut temp_count = 0;
         let mut count = 0;
+        
+        game_numbers.iter().for_each(|x| { for item in winning_num.clone() { if *x == item { println!("Match: {}", item); count += 1; }} });
 
-        for item in &game_numbers {
-            for win_num in &winning_num {
-                while item <= win_num {
-                    if item.parse::<i8>().unwrap() == win_num.parse::<i8>().unwrap(){
-                        // println!("Item: {:?} Win: {:?}", &item, &win_num);
-                        count += 1;
-                        temp_count += 1;
-                    }
-                    break
-                }
-            }
-        }
-        println! ("There was: {} matches", &count);
-        let mut i = 1;
+        let mut i: i32 = 1;
         while i <= count {
-            // if (starting_index + 1) > {
-            //     break;
-            // }
-            println!("What is len: {:?}",  array.len());
-            // count_games(games_array[count as usize], )
-            // println!("We would play: {} times.", count);
-            println!("Current: {} \nNext: {} Total so far: {}", &starting_index, starting_index + i, &temp_count);
-            println!("{}/{}", &i, &count);
-            count_games(&array.clone(), &array[(starting_index + i) as usize], starting_index + i);
-            if i == count {
-                println!("Break");
-                break;
-            }
-            // println!("Count: {}, SI: {}, SI+{}: {}", &count, &starting_index, &i, &starting_index + 1 + i);
+            println!("{i}");
+            count_games(array, &array[(starting_index + i) as usize],  starting_index + i);
             i += 1;
-            // println!("Can we index into array: {:?}", array[count as usize]);
         }
+        // println!("{:?} | {:?}", winning_num, game_numbers);
 
-        // for item in &game_numbers {
-        //     for win_num in &winning_num {
-        //         // println!("Compare I: {:?} W: {:?}", &item, &win_num);
-        //         while item <= win_num {
-        //             if item.parse::<i8>().unwrap() == win_num.parse::<i8>().unwrap(){
-        //                 if count == 0 { count = 1; 
-        //                 } else {
-        //                     count = count * 2;
-        //                 }
-        //                 println!("Match! {:?}", item);
-        //             } 
-        //             break
-        //         }
-        //     }
-        // }
-        // line_count += linecount+1;
-        // total_count += count;
-        // println!("Count: {}", total_count);
-        println!("//////////////////////////////////////? Returning: {}", &count);
         count
     }
 }
