@@ -1,3 +1,11 @@
+// Honestly just going to admit failure with this one..
+// Couldn't grasp a concept of how to complete these
+// Relied on existing solutions to solve this.
+// Not going to push anyone elses answer
+// Rather just going to keep this here as reminded for the future
+// It's something I think I can do, but not something I can do right now
+// Further experience required..
+
 use std::fs;
 
 fn main() {
@@ -20,29 +28,35 @@ fn main() {
 
     for item in games_array.clone() {
         println!("Count is: {}, Array Len: {}", index, &games_array.len());
-        total_count += count_games(&games_array, &item.clone(), index);
+        total_count += count_games(&games_array);
         index += 1;
         println!("Answer should be: {}", &total_count);
 
     }
     // println!("Games Array: {:?}", games_array);
 
-    fn count_games(array: &Vec<String>, line: &str, starting_index: i32) -> i32 {
-        println!("[{}]", starting_index);
-        let mut winning_num = line.split(":").last().unwrap().split("|").next().unwrap().split_ascii_whitespace().collect::<Vec<&str>>();
-        let mut game_numbers = line.split(":").last().unwrap().split("|").last().unwrap().split_ascii_whitespace().collect::<Vec<&str>>();
-        winning_num.sort_by_key(|x| x.parse::<i8>().unwrap());
-        game_numbers.sort_by_key(|x| x.parse::<i8>().unwrap());
+    fn count_games(array: &Vec<String>) -> i32 {
         let mut count = 0;
-        
-        game_numbers.iter().for_each(|x| { for item in winning_num.clone() { if *x == item { println!("Match: {}", item); count += 1; }} });
-
-        let mut i: i32 = 1;
-        while i <= count {
-            println!("{i}");
-            count_games(array, &array[(starting_index + i) as usize],  starting_index + i);
-            i += 1;
+        for line in array {
+            let mut winning_num = line.split(":").last().unwrap().split("|").next().unwrap().split_ascii_whitespace().collect::<Vec<&str>>();
+            let mut game_numbers = line.split(":").last().unwrap().split("|").last().unwrap().split_ascii_whitespace().collect::<Vec<&str>>();
+            winning_num.sort_by_key(|x| x.parse::<i8>().unwrap());
+            game_numbers.sort_by_key(|x| x.parse::<i8>().unwrap());
+            game_numbers.iter().for_each(|x| { for item in winning_num.clone() { if *x == item { println!("Match: {}", item); count += 1;  }} });
+            
+            let mut i: i32 = 1;
+            while i <= count {
+                println!("{i}");
+                // count_games(array, &array[(starting_index + i) as usize],  starting_index + i);
+                i += 1;
+            }
         }
+        
+        
+        
+        // Iterate over everything once
+        // If card 1 has 4 wins then we add 2,3,4,5 to the array if has 3 then 3 4 5 [2,3,4,5,3,4,5] => [2,3,3,4,4,5,5] etc  1 = 4, 2 = 3, 4 = 2, 5 = 0. 1(1),2(2), 
+
         // println!("{:?} | {:?}", winning_num, game_numbers);
 
         count
